@@ -9,11 +9,11 @@ const sampleRates = [44100, 48000, 32000, 0];
 // then skips ahead by the frame size to find the next frame. The process continues until the end of the buffer.
 //
 // Parameters:
-//   buffer: A Buffer or Uint8Array containing MP3 data.
+//   buffer: A Buffer containing MP3 data.
 //
 // Returns:
 //   The total number of valid MP3 frames found in the buffer.
-export function countFrames(buffer: any) {
+export function countFrames(buffer: Buffer<ArrayBuffer>) {
   let offset = 0;
   let frameCount = 0;
 

@@ -14,7 +14,6 @@
     "localstack:stop": "docker-compose down",
     "localstack:logs": "docker-compose logs -f localstack",
     "setup:check": "node scripts/setup-check.js",
-    "test:ping": "node scripts/test-ping.js",
     "deploy:local": "npm run build && pushd infrastructure && npm run deploy && popd"
   },
   "devDependencies": {
