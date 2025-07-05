@@ -7,9 +7,25 @@ import { addBucketReadPolicyToRole, createBucket } from './s3';
 // Create the ping Lambda with the SES role
 const [pingLambda] = createLambdaFunction('ping', '../dist/functions/ping', 'index.handler');
 
+// Create the S3 bucket for MP3 uploads
+export const mp3Bucket = createBucket('mp3-upload-bucket');
+
+const role = addBucketReadPolicyToRole('mp3-analyse', mp3Bucket);
+
+// Create the MP3 analysis Lambda
+const [mp3AnalyseLambda] = createLambdaFunction(
+  'mp3-analyse',
+  '../dist/functions/mp3',
+  'index.handler',
+  {
+    BUCKET_NAME: mp3Bucket.bucket,
+  },
+  role
+);
 
 const { api } = createApiRoutes({
   pingLambda,
+  mp3AnalyseLambda,
 });
 // Export the URL of the API
 export const url = api.stage.invokeUrl;
