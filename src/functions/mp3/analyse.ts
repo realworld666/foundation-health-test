@@ -1,40 +1,34 @@
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { buildResponse } from '@/utils/buildResponse';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { countFrames } from './logic';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const bucket = process.env.BUCKET_NAME;
-  const s3 = new S3Client({ region: process.env.AWS_REGION || 'us-east-1' });
-  const filename = event.queryStringParameters?.file;
-  if (!filename) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: 'Missing file query parameter' }),
-    };
+  // Check if body exists and is base64 encoded
+  if (!event.body) {
+    return buildResponse(400, JSON.stringify({ error: 'No file data provided' }));
   }
+
   try {
-    const command = new GetObjectCommand({ Bucket: bucket!, Key: filename });
-    const response = await s3.send(command);
-    const fileBuffer = await response.Body?.transformToByteArray();
+    // Decode the base64 encoded file data
+    const fileBuffer = Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8');
 
-    if (!fileBuffer) {
-      throw new Error('Failed to read file content');
-    }
+    const frames = countFrames(fileBuffer);
 
-    // You can process fileBuffer as needed
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        message: `Loaded file from S3: ${bucket}/${filename}, size: ${fileBuffer.length} bytes`,
-        size: fileBuffer.length,
-      }),
-    };
+    // Return success response with file info
+    return buildResponse(
+      200,
+      JSON.stringify({
+        frames,
+      })
+    );
   } catch (err: any) {
-    return {
-      statusCode: 404,
-      body: JSON.stringify({
-        error: `Error loading file from S3: ${bucket}/${filename}`,
+    console.error('Error uploading file:', err);
+    return buildResponse(
+      500,
+      JSON.stringify({
+        error: 'Error uploading file to S3',
         details: err.message,
-      }),
-    };
+      })
+    );
   }
 };

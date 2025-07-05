@@ -9,8 +9,8 @@ export function createApiRoutes(resources: { pingLambda: Function; mp3AnalyseLam
       eventHandler: resources.pingLambda,
     },
     {
-      path: '/mp3',
-      method: 'GET',
+      path: '/file-upload',
+      method: 'POST',
       eventHandler: resources.mp3AnalyseLambda,
     },
   ]);

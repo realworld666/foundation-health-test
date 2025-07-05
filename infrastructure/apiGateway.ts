@@ -23,6 +23,7 @@ export function createRESTAPI(routes: RouteArgs[]) {
   // Create API Gateway
   const api = new aws.apigateway.RestApi('api', {
     name: 'api',
+    binaryMediaTypes: ['audio/mpeg'],
   });
 
   // Create a CORS handler for OPTIONS requests
