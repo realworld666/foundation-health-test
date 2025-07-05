@@ -1,0 +1,17 @@
+{
+  "name": "jfg-infrastructure",
+  "main": "index.ts",
+  "scripts": {
+    "deploy": "pulumi up --refresh --stack fh-backend",
+    "deploy-local-quick": "pulumi up --yes --non-interactive --skip-preview --stack fh-backend",
+    "destroy-local": "pulumi down --stack fh-backend"
+  },
+  "devDependencies": {
+    "@types/node": "^20"
+  },
+  "dependencies": {
+    "@pulumi/aws": "^6.68.0",
+    "@pulumi/awsx": "^2.21.0",
+    "@pulumi/pulumi": "^3.113.0"
+  }
+}
