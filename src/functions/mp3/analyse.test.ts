@@ -15,6 +15,14 @@ describe('analyse.handler', () => {
     expect(JSON.parse(result.body)).toHaveProperty('error');
   });
 
+  it('returns 400 if body is an mp3 in the correct format', async () => {
+    vi.mocked(countFrames).mockReturnValueOnce(0);
+    const event = { body: 'test-data', isBase64Encoded: false } as any;
+    const result = await handler(event);
+    expect(result.statusCode).toBe(400);
+    expect(JSON.parse(result.body)).toHaveProperty('error');
+  });
+
   it('returns frame count for valid base64 MP3 data', async () => {
     const event = {
       body: buffer.toString('base64'),

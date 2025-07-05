@@ -13,6 +13,12 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     const fileBuffer = Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8');
 
     const frames = countFrames(fileBuffer);
+    if (frames === 0) {
+      return buildResponse(
+        400,
+        JSON.stringify({ error: 'No frames found in file. Is it a valid MP3 file?' })
+      );
+    }
 
     // Return success response with file info
     return buildResponse(
