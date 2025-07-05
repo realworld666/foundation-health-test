@@ -18,7 +18,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     return buildResponse(
       200,
       JSON.stringify({
-        frames,
+        frameCount: frames,
       })
     );
   } catch (err: any) {

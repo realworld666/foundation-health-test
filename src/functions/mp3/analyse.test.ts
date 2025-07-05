@@ -22,7 +22,7 @@ describe('analyse.handler', () => {
     } as any;
     const result = await handler(event);
     expect(result.statusCode).toBe(200);
-    expect(JSON.parse(result.body)).toEqual({ frames: 1 });
+    expect(JSON.parse(result.body)).toEqual({ frameCount: 1 });
   });
 
   it('returns 500 and error details if countFrames throws', async () => {
