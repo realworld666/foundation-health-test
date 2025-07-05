@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  localstack:
+    container_name: foundation-health-localstack
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"            # LocalStack Gateway
+      - "4510-4559:4510-4559"  # External services port range
+    environment:
+      # LocalStack configuration
+      - DEBUG=${DEBUG:-0}
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR:-local}
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - SERVICES=lambda,apigateway,s3,dynamodb,cloudformation,sts,iam,logs,cloudwatch
+      - DATA_DIR=${DATA_DIR:-/tmp/localstack/data}
+      - PERSISTENCE=${PERSISTENCE:-1}
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - HOSTNAME_EXTERNAL=localhost
+      - LS_LOG=warn
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - localstack-network
+
+networks:
+  localstack-network:
+    driver: bridge
