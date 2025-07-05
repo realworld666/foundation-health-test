@@ -240,21 +240,12 @@ export function createRESTAPI(routes: RouteArgs[]) {
     { dependsOn: deploymentDependencies }
   );
 
-  // Create CloudWatch log group for API Gateway access logs
-  const logGroup = new aws.cloudwatch.LogGroup(`${stageName}-api-logs`, {
-    retentionInDays: 7,
-  });
-
   // Create stage
   const stage = new aws.apigateway.Stage(`${stageName}-stage`, {
     deployment: deployment.id,
     restApi: api.id,
     stageName: stageName,
     xrayTracingEnabled: true,
-    accessLogSettings: {
-      destinationArn: logGroup.arn,
-      format: `{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","caller":"$context.identity.caller","user":"$context.identity.user","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}`,
-    },
   });
 
   return {

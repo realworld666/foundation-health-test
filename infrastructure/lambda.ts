@@ -50,7 +50,7 @@ export const createLambdaFunction = (
     timeout?: number;
     logRetentionInDays?: number;
   }
-): [aws.lambda.Function, aws.cloudwatch.LogGroup] => {
+): aws.lambda.Function => {
   const commonLambdaSettings = getCommonLambdaSettings(name, role);
 
   const assets: { [key: string]: pulumi.asset.Asset } = {
@@ -78,12 +78,5 @@ export const createLambdaFunction = (
     },
   });
 
-  // Create CloudWatch log group with the exact Lambda name
-  const logGroupName = lambda.name.apply((name) => `/aws/lambda/${name}`);
-  const logGroup = new aws.cloudwatch.LogGroup(`${stageName}-${name}-log-group`, {
-    name: logGroupName,
-    retentionInDays: config?.logRetentionInDays ?? 14,
-  });
-
-  return [lambda, logGroup];
+  return lambda;
 };

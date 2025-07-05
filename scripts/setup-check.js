@@ -36,6 +36,7 @@ const checks = [
   checkCommand('npm --version', 'npm'),
   checkCommand('docker --version', 'Docker'),
   checkCommand('docker-compose --version', 'Docker Compose'),
+  checkCommand('pulumi version', 'Pulumi CLI'),
 ];
 
 // Check required files
