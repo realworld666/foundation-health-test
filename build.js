@@ -12,7 +12,7 @@ function findTSFiles(dir, files = []) {
 
     if (stat.isDirectory()) {
       findTSFiles(fullPath, files);
-    } else if (item.endsWith('.ts') && !item.endsWith('.d.ts')) {
+    } else if (item.endsWith('.ts') && !item.endsWith('.d.ts') && !item.endsWith('.test.ts')) {
       files.push(fullPath);
     }
   }
